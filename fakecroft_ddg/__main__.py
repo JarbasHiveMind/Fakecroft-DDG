@@ -1,44 +1,14 @@
-from fakecroft_ddg import get_listener
-from jarbas_hive_mind.configuration import CONFIGURATION
+from hivemind_core.service import HiveMindService
+from ovos_utils.messagebus import FakeBus
+
+from fakecroft_ddg import FakeCroftDDGMindProtocol
 
 
-def start_mind(config=None, bus=None):
-
-    config = config or CONFIGURATION
-
-    # listen
-    listener = get_listener(bus=bus)
-
-    # use http
-    #config["ssl"]["use_ssl"] = False
-
-    # read port and ssl settings
-    listener.load_config(config)
-
-    listener.listen()
+def run():
+    service = HiveMindService(protocol=FakeCroftDDGMindProtocol,
+                              bus=FakeBus())
+    service.run()
 
 
-if __name__ == '__main__':
-    # TODO argparse
-    start_mind()
-
-    # that's it, now external applications can connect to the HiveMind
-
-    # use configuration to set things like
-    #  - blacklisted/whitelisted ips
-    #  - blacklisted/whitelisted message_types
-    #  - blacklisted/whitelisted intents - Coming soon
-    #  - blacklisted/whitelisted skills  - Coming soon
-
-    # you can send messages to the mycroft bus to send/broadcast to clients
-    # 'Message(hive.client.broadcast',
-    #           {"payload":
-    #               {"msg_type": "speak",
-    #               "data": {"utterance": "Connected to the HiveMind"}
-    #           })
-
-    # or you can listen to hive mind events
-    # "hive.client.connection.error"
-    # "hive.client.connect"
-    # "hive.client.disconnect"
-    # "hive.client.send.error"
+if __name__ == "__main__":
+    run()
